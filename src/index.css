@@ -1,12 +1,8 @@
 @import "tailwindcss";
 
-:root {
-  font-family: Arial, Helvetica, sans-serif;
-  color: #f5f5f2;
-  background: #111111;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-}
+@import "./styles/globals.css";
+@import "./styles/typography.css";
+@import "./styles/animations.css";
 
 * {
   box-sizing: border-box;
@@ -14,19 +10,18 @@
 
 html {
   scroll-behavior: auto;
-  background: #111111;
+  background: var(--color-bg);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #111111;
-}
-
-button,
-a {
-  font: inherit;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: Arial, Helvetica, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
 }
 
 img,
@@ -36,6 +31,6 @@ video {
 }
 
 ::selection {
-  background: #f5f5f2;
-  color: #111111;
+  background: var(--color-text);
+  color: var(--color-bg);
 }
