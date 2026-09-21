@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "../../lib/gsap";
+import { gsap } from "../../lib/gsap";
 import useReducedMotion from "../../hooks/useReducedMotion";
 import heroImage from "../../assets/hero.png";
 
@@ -11,59 +11,99 @@ function Hero() {
     if (!heroRef.current) return;
 
     const context = gsap.context(() => {
-      const intro = gsap.timeline({
-        defaults: {
-          ease: "power3.out",
-        },
-      });
-
-      intro
-        .from(".hero-media", {
-          scale: 1.12,
-          opacity: 0,
-          duration: 1.8,
-          ease: "power3.out",
-        })
-        .from(
-          ".hero-eyebrow",
-          {
-            y: 30,
-            opacity: 0,
-            duration: 0.8,
-          },
-          "-=1.1",
-        )
-        .from(
-          ".hero-title-line",
-          {
-            yPercent: 110,
-            opacity: 0,
-            duration: 1.2,
-            stagger: 0.08,
-          },
-          "-=0.45",
-        )
-        .from(
-          ".hero-description",
-          {
-            y: 24,
-            opacity: 0,
-            duration: 0.8,
-          },
-          "-=0.7",
-        )
-        .from(
-          ".hero-scroll",
-          {
-            opacity: 0,
-            y: 12,
-            duration: 0.6,
-          },
-          "-=0.35",
-        );
+      /*
+       * =========================================================
+       * INTRO
+       * =========================================================
+       */
 
       if (!reducedMotion) {
-        gsap.to(".hero-media-image", {
+        const intro = gsap.timeline({
+          defaults: {
+            ease: "power3.out",
+          },
+        });
+
+        intro
+          .from(".hero-atmosphere", {
+            opacity: 0,
+            scale: 1.06,
+            duration: 1.6,
+            ease: "power2.out",
+          })
+          .from(
+            ".hero-image",
+            {
+              opacity: 0,
+              scale: 1.06,
+              duration: 1.5,
+            },
+            "-=1.2",
+          )
+          .from(
+            ".hero-eyebrow",
+            {
+              y: 25,
+              opacity: 0,
+              duration: 0.75,
+            },
+            "-=0.9",
+          )
+          .from(
+            ".hero-title-line",
+            {
+              y: 45,
+              opacity: 0,
+              duration: 1,
+              stagger: 0.1,
+              ease: "power4.out",
+            },
+            "-=0.4",
+          )
+          .from(
+            ".hero-description",
+            {
+              y: 20,
+              opacity: 0,
+              duration: 0.7,
+            },
+            "-=0.55",
+          )
+          .from(
+            ".hero-scroll",
+            {
+              y: 15,
+              opacity: 0,
+              duration: 0.55,
+            },
+            "-=0.3",
+          );
+
+        /*
+         * =======================================================
+         * BACKGROUND PARALLAX
+         * =======================================================
+         */
+
+        gsap.to(".hero-atmosphere", {
+          yPercent: 8,
+          scale: 1.04,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1.2,
+          },
+        });
+
+        /*
+         * =======================================================
+         * IMAGE PARALLAX
+         * =======================================================
+         */
+
+        gsap.to(".hero-image", {
           yPercent: 12,
           scale: 1.06,
           ease: "none",
@@ -71,53 +111,208 @@ function Hero() {
             trigger: heroRef.current,
             start: "top top",
             end: "bottom top",
-            scrub: true,
+            scrub: 1,
           },
         });
 
-        gsap.to(".hero-media", {
-          yPercent: -5,
+        /*
+         * =======================================================
+         * ARCHITECTURAL GRID
+         * =======================================================
+         */
+
+        gsap.to(".hero-grid", {
+          yPercent: -6,
+          xPercent: 2,
           ease: "none",
           scrollTrigger: {
             trigger: heroRef.current,
             start: "top top",
             end: "bottom top",
-            scrub: true,
+            scrub: 1.4,
           },
         });
 
-        gsap.to(".hero-content", {
-          yPercent: -12,
-          opacity: 0.35,
+        /*
+         * =======================================================
+         * TITLE CHOREOGRAPHY
+         *
+         * IMPORTANT:
+         *
+         * The words do NOT travel vertically out of the viewport.
+         *
+         * Each line gets its own subtle horizontal movement and
+         * scale change, creating the cinematic layered feeling
+         * without destroying the typography.
+         * =======================================================
+         */
+
+        // BUILDING
+        gsap.to(".hero-title-line:nth-child(1)", {
+          xPercent: -4,
+          scale: 0.97,
           ease: "none",
           scrollTrigger: {
             trigger: heroRef.current,
             start: "top top",
-            end: "75% top",
-            scrub: true,
+            end: "70% top",
+            scrub: 1,
           },
         });
+
+        // WHAT
+        gsap.to(".hero-title-line:nth-child(2)", {
+          xPercent: 4,
+          scale: 0.985,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "70% top",
+            scrub: 1,
+          },
+        });
+
+        // MATTERS
+        gsap.to(".hero-title-line:nth-child(3)", {
+          xPercent: -3,
+          scale: 0.975,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "70% top",
+            scrub: 1,
+          },
+        });
+
+        /*
+         * =======================================================
+         * VERY SUBTLE TITLE GROUP MOVEMENT
+         *
+         * Only after the individual choreography has played,
+         * the complete title begins to compress slightly.
+         * =======================================================
+         */
+
+        gsap.to(".hero-title", {
+          scale: 0.94,
+          yPercent: -2,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "55% top",
+            end: "90% top",
+            scrub: 1,
+          },
+        });
+
+        /*
+         * =======================================================
+         * DESCRIPTION
+         * =======================================================
+         */
+
+        gsap.to(".hero-description", {
+          opacity: 0,
+          y: -15,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "30% top",
+            end: "55% top",
+            scrub: 1,
+          },
+        });
+
+        /*
+         * =======================================================
+         * EYEBROW
+         * =======================================================
+         */
+
+        gsap.to(".hero-eyebrow", {
+          opacity: 0,
+          y: -15,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "25% top",
+            end: "50% top",
+            scrub: 1,
+          },
+        });
+
+        /*
+         * =======================================================
+         * HERO FADE
+         *
+         * We fade the entire composition only near the end.
+         * The title therefore remains visible for most of the
+         * cinematic hero sequence.
+         * =======================================================
+         */
+
+        gsap.to(".hero-copy", {
+          opacity: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "68% top",
+            end: "95% top",
+            scrub: 1,
+          },
+        });
+
+        /*
+         * =======================================================
+         * DARKNESS
+         * =======================================================
+         */
+
+        gsap.to(".hero-darkness", {
+          opacity: 0.72,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "55% top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+
+        /*
+         * =======================================================
+         * SCROLL INDICATOR
+         * =======================================================
+         */
 
         gsap.to(".hero-scroll", {
           opacity: 0,
-          y: 30,
+          y: 20,
           ease: "none",
           scrollTrigger: {
             trigger: heroRef.current,
-            start: "15% top",
-            end: "35% top",
+            start: "8% top",
+            end: "23% top",
             scrub: true,
           },
         });
 
-        gsap.to(".hero-media-overlay", {
-          opacity: 0.35,
+        /*
+         * =======================================================
+         * BOTTOM TRANSITION
+         * =======================================================
+         */
+
+        gsap.to(".hero-transition", {
+          height: "38vh",
           ease: "none",
           scrollTrigger: {
             trigger: heroRef.current,
-            start: "top top",
+            start: "55% top",
             end: "bottom top",
-            scrub: true,
+            scrub: 1,
           },
         });
       }
@@ -129,54 +324,119 @@ function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-[120vh] overflow-hidden bg-[var(--color-bg)]"
+      className="relative h-[145vh] bg-[var(--color-bg)]"
     >
-      {/* Media layer */}
-      <div className="hero-media absolute inset-0 overflow-hidden">
-        <img
-          src={heroImage}
-          alt=""
-          className="hero-media-image h-full w-full object-cover object-center"
-        />
+      {/* =====================================================
+          STICKY CINEMATIC STAGE
+          ===================================================== */}
 
-        <div className="hero-media-overlay absolute inset-0 bg-black/65" />
+      <div className="sticky top-0 h-screen overflow-hidden">
+        {/* ===================================================
+            ATMOSPHERE
+            =================================================== */}
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,rgba(255,255,255,0.12),transparent_34%)]" />
+        <div className="hero-atmosphere pointer-events-none absolute inset-[-8%]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_38%,rgba(255,255,255,0.14),transparent_25%)]" />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg)] via-[var(--color-bg)]/75 to-transparent" />
+          <div className="absolute left-[55%] top-[12%] h-[48vw] w-[48vw] rounded-full border border-white/[0.045]" />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] via-transparent to-black/20" />
-      </div>
+          <div className="absolute left-[61%] top-[22%] h-[34vw] w-[34vw] rounded-full border border-white/[0.03]" />
 
-      {/* Hero content */}
-      <div className="hero-content relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col justify-end px-5 pb-12 pt-32 md:px-10 md:pb-16">
-        <p className="hero-eyebrow text-label mb-8 text-[var(--color-text-muted)]">
-          Civil & Electrical Engineers · Contractors · Constructors
-        </p>
-
-        <div className="overflow-hidden">
-          <h1 className="font-display text-[clamp(4.5rem,11vw,11rem)] font-medium leading-[0.82] tracking-[-0.07em]">
-            <span className="hero-title-line block">Building</span>
-            <span className="hero-title-line block">what</span>
-            <span className="hero-title-line block">matters.</span>
-          </h1>
+          <div className="absolute left-[67%] top-[32%] h-[20vw] w-[20vw] rounded-full border border-white/[0.025]" />
         </div>
 
-        <div className="mt-10 flex flex-col justify-between gap-8 md:flex-row md:items-end">
-          <p className="hero-description max-w-md text-sm leading-7 text-[var(--color-text-muted)] md:text-base">
-            Laveet Enterprises delivers civil construction and government
-            contracting work across Pakistan.
-          </p>
+        {/* ===================================================
+            ARCHITECTURAL GRID
+            =================================================== */}
 
-          <div className="hero-scroll text-label flex items-center gap-4 text-[var(--color-text-subtle)]">
-            <span className="h-px w-12 bg-[var(--color-border-strong)]" />
-            Scroll to explore
+        <div className="hero-grid pointer-events-none absolute inset-[-5%] opacity-[0.18]">
+          <div className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:90px_90px]" />
+        </div>
+
+        {/* ===================================================
+            HERO IMAGE
+            =================================================== */}
+
+        <div className="hero-image pointer-events-none absolute inset-[-8%]">
+          <img
+            src={heroImage}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover object-center opacity-[0.13] grayscale"
+          />
+
+          <div className="absolute inset-0 bg-black/55" />
+
+          <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg)] via-[var(--color-bg)]/80 to-transparent" />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] via-transparent to-black/20" />
+        </div>
+
+        {/* ===================================================
+            DARK CINEMATIC OVERLAY
+            =================================================== */}
+
+        <div className="hero-darkness pointer-events-none absolute inset-0 bg-black opacity-0" />
+
+        {/* ===================================================
+            MAIN CONTENT
+            =================================================== */}
+
+        <div className="hero-inner relative z-10 mx-auto flex h-screen max-w-[1440px] flex-col justify-end px-5 pb-12 pt-32 md:px-10 md:pb-16">
+          <div className="hero-copy">
+            {/* Eyebrow */}
+
+            <p className="hero-eyebrow text-label mb-8 text-[var(--color-text-muted)]">
+              Civil & Electrical Engineers · Contractors · Constructors
+            </p>
+
+            {/* =================================================
+                TITLE
+                ================================================= */}
+
+            <h1
+              className="hero-title font-display text-[clamp(3.5rem,8vw,8rem)] font-medium leading-[0.86] tracking-[-0.06em]"
+            >
+              <span className="hero-title-line block">
+                Building
+              </span>
+
+              <span className="hero-title-line block">
+                what
+              </span>
+
+              <span className="hero-title-line block">
+                matters.
+              </span>
+            </h1>
+
+            {/* =================================================
+                SUPPORTING CONTENT
+                ================================================= */}
+
+            <div className="mt-10 flex flex-col justify-between gap-8 md:flex-row md:items-end">
+              <p className="hero-description max-w-md text-sm leading-7 text-[var(--color-text-muted)] md:text-base">
+                Laveet Enterprises delivers civil construction and
+                government contracting work across Pakistan.
+              </p>
+
+              {/* Scroll indicator */}
+
+              <div className="hero-scroll text-label flex items-center gap-4 text-[var(--color-text-subtle)]">
+                <span className="h-px w-12 bg-[var(--color-border-strong)]" />
+
+                Scroll to explore
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Bottom transition */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 h-40 bg-gradient-to-t from-[var(--color-bg)] to-transparent" />
+        {/* ===================================================
+            CINEMATIC BOTTOM TRANSITION
+            =================================================== */}
+
+        <div className="hero-transition pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-20 bg-gradient-to-t from-[var(--color-bg)] via-[var(--color-bg)]/85 to-transparent" />
+      </div>
     </section>
   );
 }
