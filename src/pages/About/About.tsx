@@ -1,7 +1,9 @@
+import AboutIntro from "../../sections/AboutIntro/AboutIntro";
+
 function About() {
   return (
-    <main className="min-h-screen bg-[#111111] px-6 py-32 text-white">
-      <h1 className="text-5xl">About</h1>
+    <main className="relative overflow-hidden bg-[var(--color-bg)]">
+      <AboutIntro />
     </main>
   );
 }
